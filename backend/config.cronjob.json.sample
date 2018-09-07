@@ -1,0 +1,12 @@
+{
+  "mysql": {
+    "host": "localhost",
+    "user": "root",
+    "password": "123456",
+    "database": "smoke_coinswap"
+  },
+  "bts_memo_key": "5KY...",
+  "bts_tracking_account_id": "1.3.1567",
+  "smk_acc": "smoke",
+  "smk_active_key": "5JB..."
+}

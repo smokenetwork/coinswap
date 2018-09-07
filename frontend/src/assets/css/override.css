@@ -1,0 +1,61 @@
+
+/***************************************/
+/* smaller page header */
+.page-header.page-header-xxs {
+    min-height: 220px !important;
+}
+
+/********************************************************************************/
+.text-stroke {
+    text-shadow: -2px -2px 0 #294f86, 2px -2px 0 #294f86, -2px 2px 0 #294f86, 2px 2px 0 #294f86;
+    -webkit-font-smoothing: antialiased;
+}
+
+
+.shadow5 {
+    text-shadow: 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black;
+}
+.shadow20 {
+    text-shadow: 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black;
+}
+.shadow40 {
+    text-shadow: 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black, 0 0 4px black;
+}
+
+.footer-transparent::after, .subscribe-line-transparent::after {
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: rgba(17, 17, 17, 0.15);
+    display: block;
+    content: "";
+    z-index: 1;
+}
+
+
+/********************************************************************************/
+.panel-actions {
+    margin-bottom: 0;
+    /*text-align: right;*/
+}
+.panel-actions a {
+    color:#333;
+}
+.panel-fullscreen {
+    display: block;
+    z-index: 9999;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+.panel-fullscreen .fullscreen_child {
+    height: 90vh;
+}

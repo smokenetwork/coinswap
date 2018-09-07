@@ -1,0 +1,26 @@
+{
+  "name": "smoke_coinswap_backend",
+  "version": "0.1.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "start:dev": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bitsharesjs": "^1.8.0",
+    "body-parser": "^1.18.2",
+    "config.json": "0.0.4",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.2",
+    "mysql2": "^1.5.2",
+    "n-readlines": "^1.0.0",
+    "node-fetch": "^2.1.2",
+    "query-string": "^6.1.0",
+    "smoke-js": "github:smokenetwork/smoke-js#dev",
+    "uuid": "^3.2.1"
+  }
+}
