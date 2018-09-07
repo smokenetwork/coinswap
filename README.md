@@ -21,3 +21,9 @@ There are a couple of components:
 - Frontend: For users to validate username on Smoke blockchain and generate memo for swapping
 
 - Backend: a cronjob tracking transactions on Bitshares network and transfering SMOKE token on Smoke network.
+
+# Production
+
+frontend and cronjob dont need to be running on the same server.
+
+cronjob should be run in a secured server.
