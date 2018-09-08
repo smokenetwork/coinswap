@@ -58,18 +58,24 @@ class CoinSwapTool extends Component {
                                     <p>The account name on Smoke chain to receive SMOKE</p>
                                     <br />
 
-                                    <input disabled={this.props.loadingCheckUsername} name="username" type="text" maxLength="16" className={`form-control border-input ${username_bg}`} placeholder="Your new account name on Smoke chain" value={this.state.username} onChange={this.handleChange} />
+                                    <input disabled={this.props.loadingCheckUsername}
+                                           name="username" type="text" maxLength="16"
+                                           autoComplete="off"
+                                           className={`form-control border-input ${username_bg}`}
+                                           placeholder="Your new account name on Smoke chain"
+                                           value={this.state.username}
+                                           onChange={this.handleChange} />
                                     <br />
                                     <div className="text-center">
                                         {(() => {
                                             if (this.props.loadingCheckUsername) {
-                                                return (<button disabled className="btn btn-sm btn-facebook btn-round">
+                                                return (<button disabled className="btn btn-sm btn-success btn-round">
                                                     <div className='uil-reload-css reload-small' style={{}}>
                                                         <div></div>
                                                     </div>
                                                 </button>);
                                             } else {
-                                                return (<button className="btn btn-sm btn-facebook btn-round" onClick={() => {
+                                                return (<button className="btn btn-sm btn-success btn-round" onClick={() => {
                                                     this.props.Action_CheckAccountName(this.state.username);
                                                 }}>Check Available</button>);
                                             }
@@ -82,7 +88,7 @@ class CoinSwapTool extends Component {
                                     <h6>Memo</h6>
                                     <p>Use this memo text for swapping SMOKE.</p>
                                     <div className="text-center">
-                                        <button className="btn btn-sm btn-facebook btn-round" onClick={() => { this.props.Action_ShowMemo(this.state.username); }}>Show me the memo</button>
+                                        <button className="btn btn-sm btn-success btn-round" onClick={() => { this.props.Action_ShowMemo(this.state.username); }}>Show me the memo</button>
                                     </div>
                                     <br />
                                     <textarea name="memo"
