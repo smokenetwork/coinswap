@@ -3,7 +3,7 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import { Action_CheckAvailable_Name, Action_Generate_Keys, Action_ShowMemo } from "../actions";
 
-class SharedropTools extends Component {
+class CoinSwapTool extends Component {
     constructor(props) {
         super(props);
 
@@ -152,4 +152,4 @@ class SharedropTools extends Component {
 
 const mapStateToProps = (state) => { return state.AppReducer; };
 const mapDispatchToProps = { Action_CheckAvailable_Name, Action_Generate_Keys, Action_ShowMemo };
-export default withRouter( connect( mapStateToProps, mapDispatchToProps)(SharedropTools) );
+export default withRouter( connect( mapStateToProps, mapDispatchToProps)(CoinSwapTool) );

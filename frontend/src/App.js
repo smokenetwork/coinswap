@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, Redirect, withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import SharedropTools from './components/SharedropTools'
+import CoinSwapTool from './components/CoinSwapTool'
 import Faq from './components/Faq'
 
 import './assets/css/paper-kit.css';
@@ -47,8 +47,8 @@ export class App extends React.Component {
                 <div className="wrapper">
 
                     <Switch>
-                        <Route name="Index" path="/" exact render={() => <Redirect to="/sharedroptools" /> } />
-                        <Route name="SharedropTools" path="/sharedroptools" component={SharedropTools} />
+                        <Route name="Index" path="/" exact render={() => <Redirect to="/coinswaptool" /> } />
+                        <Route name="CoinSwapTool" path="/coinswaptool" component={CoinSwapTool} />
                         <Route name="Faq" path="/faq" component={Faq} />
                     </Switch>
 
