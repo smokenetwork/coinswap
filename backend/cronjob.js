@@ -18,7 +18,7 @@ const KEY_STATE_STOP = 'stop';
 let stop = "1.11.0";
 let last_irreversible_block_num = 0;
 
-job_scan_claim = async () => {
+job_scan = async () => {
     console.log('job_scan_claim......');
     try {
         // await Apis.instance("https://api.bts.ai/", true).init_promise;
@@ -76,8 +76,6 @@ processTx = async (connection, tx) => {
         return;
     }
 
-
-    /////////////////
     let swap_amount_from = op.amount.amount;
     if (swap_amount_from < 1000) { // min amount is 1.000 SMOKE = 1000 ( 3 decimals)
         stop = tx.id;
@@ -89,6 +87,11 @@ processTx = async (connection, tx) => {
 
     const memo = op.memo;
     // console.log(memo.message);
+    if (typeof memo === 'undefined') {
+        stop = tx.id;
+        await save_last_state(connection);
+        return;
+    }
 
     let memo_plain = null;
     try {
@@ -102,14 +105,14 @@ processTx = async (connection, tx) => {
         return;
     }
 
-    if ((!plain.startsWith('swap'))) {
+    if ((!memo_plain.startsWith('swap'))) {
         stop = tx.id;
         await save_last_state(connection);
         return;
     }
 
     let amount = swap_amount_to.toFixed(3) + ' SMOKE';
-    const parsed = queryString.parseUrl(plain).query;
+    const parsed = queryString.parseUrl(memo_plain).query;
 
     // validate account name
     let isValidUsername = chainLib.utils.validateAccountName(parsed.u);
@@ -120,27 +123,33 @@ processTx = async (connection, tx) => {
         return;
     }
 
-    // check user available
+    // check user existing on smoke chain
     let existingAccs = await chainLib.api.getAccountsAsync([parsed.u]);
     if (existingAccs.length <= 0) {
-        // this account exist, ignore
+        // this account does not exist, ignore
         stop = tx.id;
         await save_last_state(connection);
         return;
     }
 
+    // check if this tx_id processed then ignored
+    const [rows, fields] = await connection.execute('SELECT * from tbl_tx where bts_tx_id=?', [tx.id]);
+    if (rows.length > 0) {
+        // if (rows[0].swap_status > 0) {
+            stop = tx.id;
+            await save_last_state(connection);
+            return;
+        // }
+    }
 
-    // ////////////////////////////////////////
-    // // update to db
-    // let wls_claim_txid = tx_id;
-    // let wls_claim_date = block_num; //convert_utc_to_unixtime(action.block_time + 'Z'); // add Z to datetime string
-    // let wls_process_time = Math.floor(new Date().getTime()/1000);
-    // let wls_process_msg = 'success';
-    // let [dbres, dberr] = await connection.execute("UPDATE tbl_account SET wls_status=1, wls_claim_txid=?, wls_claim_date=?, wls_claim_memo=?, wls_user=?, wls_process_time=?, wls_process_msg=? WHERE bts_id=?",
-    //     [wls_claim_txid, wls_claim_date, plain, parsed.u, wls_process_time, wls_process_msg, bts_id]);
-    // if (dberr) {
-    //     throw dberr;
-    // }
+    ////////////////////////////////////////
+    // update to db
+    const bts_user_id = op.from;
+    let [dbres, dberr] = await connection.execute("INSERT tbl_tx(bts_tx_id, bts_user_id, bts_block_num, amount, swap_status, smk_user) VALUES (?, ?, ?, ?, ?, ?)",
+        [tx.id, bts_user_id, tx.block_num, swap_amount_to, 1, parsed.u]);
+    if (dberr) {
+        throw dberr;
+    }
 
     ////////////////
     // Process transfering
@@ -150,7 +159,8 @@ processTx = async (connection, tx) => {
         {
             "from": config.smk_acc,
             "to": parsed.u,
-            "amount": amount
+            "amount": amount,
+            "memo": ""
         }
     ]);
 
@@ -160,9 +170,18 @@ processTx = async (connection, tx) => {
     //////////
     stop = tx.id;
     await save_last_state(connection);
+
+    // update transfer tx
+    try {
+        let [dbres, dberr] = await connection.execute("UPDATE tbl_tx SET smk_tx_id=?, smk_block_num=? WHERE bts_tx_id=?",
+            [tx_smoke.id, tx_smoke.block_num, tx.id]);
+        if (dberr) {
+            throw dberr;
+        }
+    } catch(err) {
+        console.log(err.message);
+    }
 };
-
-
 
 get_account_history_operations = async () => {
     // const accountHistory = await Apis.instance().history_api().exec('get_account_history_operations', [config.bts_tracking_account_id, 0, "1.11.0", stop, 100]);
@@ -231,4 +250,4 @@ get_connection = function () {
 };
 
 
-job_scan_claim();
+job_scan();

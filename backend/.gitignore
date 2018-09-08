@@ -32,3 +32,5 @@ config.testnet1.json
 config.testnet2.json
 config.bts.json
 config.cronjob.json
+
+yarn.lock
