@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import { PageLayout } from './PageLayout';
 
 class Faq extends Component {
     constructor(props) {
@@ -15,10 +14,9 @@ class Faq extends Component {
     render() {
 
         return(
-            <PageLayout message={this.props.message}>
+            <div>
                 Faq
-
-            </PageLayout>
+            </div>
         );
     }
 };

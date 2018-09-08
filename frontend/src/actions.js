@@ -1,9 +1,9 @@
 const queryString = require('query-string');
-let steemjs_ecc = require('@whaleshares/wlsjs/lib/auth/ecc');
-let chainLib = require('@whaleshares/wlsjs');
-chainLib.api.setOptions({url: 'https://beta.whaleshares.net/ws'});
-chainLib.config.set('address_prefix', 'WLS');
-chainLib.config.set('chain_id', 'de999ada2ff7ed3d3d580381f229b40b5a0261aec48eb830e540080817b72866');
+let steemjs_ecc = require('smoke-js/lib/auth/ecc');
+let chainLib = require('smoke-js');
+// chainLib.api.setOptions({url: 'https://beta.whaleshares.net/ws'});
+// chainLib.config.set('address_prefix', 'WLS');
+// chainLib.config.set('chain_id', 'de999ada2ff7ed3d3d580381f229b40b5a0261aec48eb830e540080817b72866');
 
 export const actionShowMessage              = (message)         => ({ type: 'M_SHOW_MSG', message });
 export const actionSetCheckUsernameLoading  = (isLoading)       => ({ type: 'M_SET_CHECK_USERNAME_LOADING', isLoading });
@@ -36,12 +36,12 @@ export const Action_CheckAvailable_Name = (username, toExitingAccount) => async 
 
         if (toExitingAccount) {
             if (existingAccs.length <= 0) {
-                throw new Error('Account Name does not exist on Whaleshares blockchain.');
+                throw new Error('Account Name does not exist on Smoke blockchain.');
             }
         } else {
             if (existingAccs.length > 0) {
                 // this account exist
-                throw new Error('Account Name exists on Whaleshares blockchain.');
+                throw new Error('Account Name exists on Smoke blockchain.');
             }
         }
 

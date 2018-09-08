@@ -12,21 +12,11 @@ import './assets/css/override.css';
 const Header = () => (
     <nav className="navbar navbar-expand-lg bg-dark">
         <div className="container">
-            {/*<div className="navbar-translate">*/}
-                {/*<Link className="navbar-brand" to="/listing">anonacc</Link>*/}
-                {/*<button className="navbar-toggler navbar-toggler-right navbar-burger" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">*/}
-                    {/*<span className="navbar-toggler-bar"></span><span className="navbar-toggler-bar"></span><span className="navbar-toggler-bar"></span>*/}
-                {/*</button>*/}
-                <Link className="navbar-brand" to="/">
-                    {/*<i className="fa fa-user-secret" aria-hidden="true" style={{opacity: .7}}></i>*/}
-                    WLS.Sharedrop</Link>
-            {/*</div>*/}
-            {/*<div className="collapse navbar-collapse" id="navbarToggler">*/}
-                <ul className="navbar-nav ml-auto" style={{flexDirection: 'row'}}>
-                    {/*<li className="nav-item"><Link to="/anonacc" className="nav-link"><i className="fa fa-user-secret" aria-hidden="true" style={{opacity: .3}}></i> Create</Link></li>*/}
-                    <li className="nav-item"><Link to="/faq" className="nav-link">Faq</Link></li>
-                </ul>
-            {/*</div>*/}
+            <Link className="navbar-brand" to="/">
+                SMOKE.coinswap</Link>
+            <ul className="navbar-nav ml-auto" style={{flexDirection: 'row'}}>
+                <li className="nav-item"><Link to="/faq" className="nav-link">Faq</Link></li>
+            </ul>
         </div>
     </nav>
 );
@@ -42,7 +32,7 @@ const Footer = () => (
                         <li><a href="###" target="_blank" rel="noopener noreferrer">Reddit</a></li>
                     </ul>
                 </nav>
-                <div className="credits ml-auto"><span className="copyright">Brought to you by BeyondBitcoin</span></div>
+                <div className="credits ml-auto"><span className="copyright">© 2018 Smoke.Network</span></div>
             </div>
         </div>
     </footer>
@@ -62,16 +52,6 @@ export class App extends React.Component {
                         <Route name="Faq" path="/faq" component={Faq} />
                     </Switch>
 
-                    <div className="subscribe-line subscribe-line-transparent" style={{backgroundImage: "url('/assets/img/bg.jpg')", backgroundAttachment: "fixed"}}>
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-9 col-sm-8">
-                                    <h4 className="mt-1 font-weight-bold title-uppercase text-info shadow5">Check out Whaleshares on its own chain...</h4>
-                                </div>
-                                <div className="col-md-3 col-sm-4"><a href="https://whaleshares.io/" target="_blank" rel="noopener noreferrer" className="btn btn-neutral btn-block btn-round">Visit Now!</a></div>
-                            </div>
-                        </div>
-                    </div>
                     {/*<div className="separator"></div>*/}
                     
                     <Footer />
