@@ -14,9 +14,9 @@ const Header = () => (
         <div className="container">
             <Link className="navbar-brand" to="/">
                 SMOKE.coinswap</Link>
-            <ul className="navbar-nav ml-auto" style={{flexDirection: 'row'}}>
-                <li className="nav-item"><Link to="/faq" className="nav-link">Faq</Link></li>
-            </ul>
+            {/*<ul className="navbar-nav ml-auto" style={{flexDirection: 'row'}}>*/}
+                {/*<li className="nav-item"><Link to="/faq" className="nav-link">Faq</Link></li>*/}
+            {/*</ul>*/}
         </div>
     </nav>
 );
