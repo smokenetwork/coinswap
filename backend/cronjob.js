@@ -2,10 +2,10 @@ let config = require('config.json')('./config.cronjob.json');
 let fetch = require("node-fetch");
 const queryString = require('query-string');
 
-let chainLib = require('@whaleshares/wlsjs');
-chainLib.api.setOptions({url: 'https://beta.whaleshares.net/ws'});
-chainLib.config.set('address_prefix', 'WLS');
-chainLib.config.set('chain_id', 'de999ada2ff7ed3d3d580381f229b40b5a0261aec48eb830e540080817b72866');
+let chainLib = require('smoke-js');
+// chainLib.api.setOptions({url: 'https://beta.whaleshares.net/ws'});
+// chainLib.config.set('address_prefix', 'WLS');
+// chainLib.config.set('chain_id', 'de999ada2ff7ed3d3d580381f229b40b5a0261aec48eb830e540080817b72866');
 
 
 let {ChainStore, PrivateKey, PublicKey, Aes} = require("bitsharesjs");
@@ -70,30 +70,22 @@ processTx = async (connection, tx) => {
         return;
     }
 
-    if (op.amount.asset_id !== "1.3.1276") { // WHALESHARE
+    if (op.amount.asset_id !== "1.3.1567") { // SMOKE
         stop = tx.id;
         await save_last_state(connection);
         return;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // here we need to check the ammount
-    // 1st week is 500 WHALESHARE, 2018/08/23-00:00:00Z < 1534982400 at block 29850078
-    // 2nd week is 250 WHALESHARE, 2018/08/31-00:00:00Z < 1535673600 at block 30080478
-    // after that 1 WHALESHARE
 
-    let required_fee = 1;
-    if (tx.block_num < 29850078) {
-        required_fee = 500;
-    } else if (tx.block_num < 30080478) {
-        required_fee = 250;
-    }
-
-    if (op.amount.amount < required_fee) {
+    /////////////////
+    let swap_amount_from = op.amount.amount;
+    if (swap_amount_from < 1000) { // min amount is 1.000 SMOKE = 1000 ( 3 decimals)
         stop = tx.id;
         await save_last_state(connection);
         return;
     }
+
+    let swap_amount_to = swap_amount_from / 1000;
 
     const memo = op.memo;
     // console.log(memo.message);
@@ -110,173 +102,67 @@ processTx = async (connection, tx) => {
         return;
     }
 
-    await process_memo(connection, tx.id, op.from, tx.block_num, memo_plain);
-};
-
-process_memo = async (connection, tx_id, bts_id, block_num, plain) => {
-    if ((!plain.startsWith('claim'))) {
-        stop = tx_id;
+    if ((!plain.startsWith('swap'))) {
+        stop = tx.id;
         await save_last_state(connection);
         return;
     }
 
-    // find sender in db
-    const [rows, fields] = await connection.execute('SELECT * from tbl_account where bts_id=?', [bts_id]);
-    if (rows.length <= 0) {
-        stop = tx_id;
-        await save_last_state(connection);
-        return;
-    }
-
-    let user = rows[0];
-    if (user.wls_status === 1) {
-        // this user claimed already, ignore
-        stop = tx_id;
-        await save_last_state(connection);
-        return;
-    }
-
-    let amount = user.sharedrop_wls;
-    amount = amount.toFixed(3) + ' WLS';
-
+    let amount = swap_amount_to.toFixed(3) + ' SMOKE';
     const parsed = queryString.parseUrl(plain).query;
-
-    if (!((parsed.e === "1") || (parsed.e === "0"))) {
-        stop = tx_id;
-        await save_last_state(connection);
-        return;
-    }
 
     // validate account name
     let isValidUsername = chainLib.utils.validateAccountName(parsed.u);
     if (isValidUsername) {
         // throw new Error(isValidUsername);
-        stop = tx_id;
+        stop = tx.id;
         await save_last_state(connection);
         return;
     }
-
-    if (parsed.e === "0") { // creating new account and transfer to vests
-        await process_claim_to_new_account(connection, tx_id, bts_id, block_num, parsed, plain, amount);
-    }
-    else if (parsed.e === "1") { // need to transfer to vests only
-        await process_claim_to_existing_account(connection, tx_id, bts_id, block_num, parsed, plain, amount);
-    }
-};
-
-// e, u, o, a, p, m
-process_claim_to_existing_account = async (connection, tx_id, bts_id, block_num, parsed, plain, amount) => {
-    console.log(JSON.stringify(parsed));
 
     // check user available
     let existingAccs = await chainLib.api.getAccountsAsync([parsed.u]);
     if (existingAccs.length <= 0) {
         // this account exist, ignore
-        stop = tx_id;
+        stop = tx.id;
         await save_last_state(connection);
         return;
     }
 
 
-    ////////////////////////////////////////
-    // update to db
-    let wls_claim_txid = tx_id;
-    let wls_claim_date = block_num; //convert_utc_to_unixtime(action.block_time + 'Z'); // add Z to datetime string
-    let wls_process_time = Math.floor(new Date().getTime()/1000);
-    let wls_process_msg = 'success';
-    let [dbres, dberr] = await connection.execute("UPDATE tbl_account SET wls_status=1, wls_claim_txid=?, wls_claim_date=?, wls_claim_memo=?, wls_user=?, wls_process_time=?, wls_process_msg=? WHERE bts_id=?",
-        [wls_claim_txid, wls_claim_date, plain, parsed.u, wls_process_time, wls_process_msg, bts_id]);
-    if (dberr) {
-        throw dberr;
-    }
+    // ////////////////////////////////////////
+    // // update to db
+    // let wls_claim_txid = tx_id;
+    // let wls_claim_date = block_num; //convert_utc_to_unixtime(action.block_time + 'Z'); // add Z to datetime string
+    // let wls_process_time = Math.floor(new Date().getTime()/1000);
+    // let wls_process_msg = 'success';
+    // let [dbres, dberr] = await connection.execute("UPDATE tbl_account SET wls_status=1, wls_claim_txid=?, wls_claim_date=?, wls_claim_memo=?, wls_user=?, wls_process_time=?, wls_process_msg=? WHERE bts_id=?",
+    //     [wls_claim_txid, wls_claim_date, plain, parsed.u, wls_process_time, wls_process_msg, bts_id]);
+    // if (dberr) {
+    //     throw dberr;
+    // }
 
     ////////////////
-    // Processing sharedrop
+    // Process transfering
     let operations = [];
     operations.push([
-        "transfer_to_vesting",
+        "transfer",
         {
-            "from": config.creater,
+            "from": config.smk_acc,
             "to": parsed.u,
             "amount": amount
         }
     ]);
 
-    const tx = await chainLib.broadcast.sendAsync({operations, extensions: []}, {"active": config.activekey});
-    console.log(tx);
+    const tx_smoke = await chainLib.broadcast.sendAsync({operations, extensions: []}, {"active": config.smk_active_key});
+    console.log(tx_smoke);
 
     //////////
-    stop = tx_id;
+    stop = tx.id;
     await save_last_state(connection);
 };
 
-// // e, u, o, a, p, m
-process_claim_to_new_account = async (connection, tx_id, bts_id, block_num, parsed, plain, amount) => {
-    console.log(JSON.stringify(parsed));
 
-    // check user available
-    let existingAccs = await chainLib.api.getAccountsAsync([parsed.u]);
-    if (existingAccs.length > 0) {
-        // this account exist, ignore
-        stop = tx_id;
-        await save_last_state(connection);
-        return;
-    }
-
-    if (!chainLib.auth.isPubkey(parsed.o, 'WLS') || !chainLib.auth.isPubkey(parsed.a, 'WLS') || !chainLib.auth.isPubkey(parsed.p, 'WLS') || !chainLib.auth.isPubkey(parsed.m, 'WLS')) {
-        stop = tx_id;
-        await save_last_state(connection);
-        return;
-    }
-
-
-    ////////////////////////////////////////
-    // update to db
-    let wls_claim_txid = tx_id;
-    let wls_claim_date = block_num; //convert_utc_to_unixtime(action.block_time + 'Z'); // add Z to datetime string
-    let wls_process_time = Math.floor(new Date().getTime()/1000);
-    let wls_process_msg = 'success';
-    let [dbres, dberr] = await connection.execute("UPDATE tbl_account SET wls_status=1, wls_claim_txid=?, wls_claim_date=?, wls_claim_memo=?, wls_user=?, wls_process_time=?, wls_process_msg=? WHERE bts_id=?",
-        [wls_claim_txid, wls_claim_date, plain, parsed.u, wls_process_time, wls_process_msg, bts_id]);
-    if (dberr) {
-        throw dberr;
-    }
-
-    ////////////////
-    // Processing Creating account
-    let operations = [];
-    operations.push(["account_create",
-        {
-            "fee": amount, // config.fee
-            "creator": config.creater,
-            "new_account_name": parsed.u,
-            "owner": {
-                "weight_threshold": 1,
-                "account_auths": [],
-                "key_auths": [[parsed.o, 1]]
-            },
-            "active": {
-                "weight_threshold": 1,
-                "account_auths": [],
-                "key_auths": [[parsed.a, 1]]
-            },
-            "posting": {
-                "weight_threshold": 1,
-                "account_auths": [],
-                "key_auths": [[parsed.p, 1]]
-            },
-            "memo_key": parsed.m,
-            "json_metadata": ""
-        }
-    ]);
-
-    const tx = await chainLib.broadcast.sendAsync({operations, extensions: []}, {"active": config.activekey});
-    console.log(tx);
-
-    //////////
-    stop = tx_id;
-    await save_last_state(connection);
-};
 
 get_account_history_operations = async () => {
     // const accountHistory = await Apis.instance().history_api().exec('get_account_history_operations', [config.bts_tracking_account_id, 0, "1.11.0", stop, 100]);
