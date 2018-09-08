@@ -8,4 +8,4 @@ app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../frontend', 'build', 'index.html'));
 });
 
-app.listen(8080, () => console.log("Listening on port 8080!"));
+app.listen(8010, () => console.log("Listening on port 8010!"));
