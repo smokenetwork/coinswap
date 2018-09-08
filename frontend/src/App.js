@@ -10,28 +10,23 @@ import './assets/css/nucleo-icons.css';
 import './assets/css/override.css';
 
 const Header = () => (
-    <nav className="navbar navbar-expand-lg bg-dark">
+    <nav className="navbar navbar-expand-lg">
         <div className="container">
             <Link className="navbar-brand" to="/">
-                SMOKE.coinswap</Link>
+                <img src="https://d33wubrfki0l68.cloudfront.net/ac8889e430299133ac5b8c2cd6963794aa05af0d/588b4/graphics/smoke_user.png" alt="smoke logo"/> Bitshares Claim Tool</Link>
             {/*<ul className="navbar-nav ml-auto" style={{flexDirection: 'row'}}>*/}
                 {/*<li className="nav-item"><Link to="/faq" className="nav-link">Faq</Link></li>*/}
             {/*</ul>*/}
+            <a href="https://smoke.io" class="btn btn-success">Back to Smoke.io</a>
         </div>
     </nav>
 );
 
 const Footer = () => (
-    <footer className="footer footer-black">
+    <footer className="footer">
         <div className="container">
             <div className="row">
-                <nav className="footer-nav">
-                    <ul>
-                        <li><a href="###" target="_blank" rel="noopener noreferrer">Blog</a></li>
-                        <li><a href="###" target="_blank" rel="noopener noreferrer">Twitter</a></li>
-                        <li><a href="###" target="_blank" rel="noopener noreferrer">Reddit</a></li>
-                    </ul>
-                </nav>
+
                 <div className="credits ml-auto"><span className="copyright">© 2018 Smoke.Network</span></div>
             </div>
         </div>
@@ -53,7 +48,7 @@ export class App extends React.Component {
                     </Switch>
 
                     {/*<div className="separator"></div>*/}
-                    
+
                     <Footer />
 
                 </div>

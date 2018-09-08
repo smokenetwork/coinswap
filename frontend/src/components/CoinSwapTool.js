@@ -44,7 +44,7 @@ class CoinSwapTool extends Component {
 
         return(
             <div className="main">
-                <div className="section section-gray">
+                <div className="section">
                     <div className="container">
 
                         <div className="row">
@@ -54,15 +54,20 @@ class CoinSwapTool extends Component {
                                 {renderMessage}
 
                                 <div className="form-group">
+                                    <h3>This is the official Smoke claim tool for Bitshares SMOKE UIA holders.</h3>
+                                    <br />
+                                    <p><strong>IF YOU BOUGHT SMOKE DURING THE MAIN ICO PLEASE <a href="https://smoke.io/claim.html" target="_blank">CLICK HERE</a> TO LEARN HOW TO CLAIM.</strong></p>
+                                    <br />
                                     <h6>Account Name <span className="icon-danger">*</span></h6>
-                                    <p>The account name on Smoke chain to receive SMOKE</p>
+                                    <p>Your account name on the Smoke chain to receive SMOKE. </p>
+                                    <p>If you do not have an account <a href="https://smoke.io/pick_account" target="_blank">create one now.</a></p>
                                     <br />
 
                                     <input disabled={this.props.loadingCheckUsername}
                                            name="username" type="text" maxLength="16"
                                            autoComplete="off"
                                            className={`form-control border-input ${username_bg}`}
-                                           placeholder="Your new account name on Smoke chain"
+                                           placeholder="Your username on Smoke chain"
                                            value={this.state.username}
                                            onChange={this.handleChange} />
                                     <br />
@@ -77,7 +82,7 @@ class CoinSwapTool extends Component {
                                             } else {
                                                 return (<button className="btn btn-sm btn-success btn-round" onClick={() => {
                                                     this.props.Action_CheckAccountName(this.state.username);
-                                                }}>Check Available</button>);
+                                                }}>Check Account</button>);
                                             }
                                         })()}
                                     </div>
@@ -101,8 +106,10 @@ class CoinSwapTool extends Component {
                                     {/*<h5><small><span id="textarea-limited-message" className="pull-right">Copy Memo</span></small></h5>*/}
 
                                     <br />
-                                    <p>Send <code>SMOKE</code> to <code>smoke-network</code> with this memo from your Bitshares account</p>
+                                    <p>Send a minimum of 1 <code>SMOKE</code> to <code>smoke-network</code> with the above memo from your Bitshares account</p>
+                                    <h6>MAKE SURE YOU USE THE CORRECT MEMO AS THIS IS AUTOMATED!</h6>
                                     <br />
+                                    <p> You will receive your Smoke on chain within 5 minutes. If something went wrong please email <a href="mailto:hello@smoke.network">hello@smoke.network</a></p>
                                 </div>
                             </div>
 

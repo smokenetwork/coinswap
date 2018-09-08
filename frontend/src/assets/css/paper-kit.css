@@ -197,11 +197,11 @@ body {
 }
 
 a {
-  color: #51bcda;
+  color: #5db536;
 }
 a:hover, a:focus {
-  color: #2ba9cd;
-  text-decoration: none;
+  color: #48862c;
+  text-decoration: underline;
 }
 
 hr {
@@ -440,16 +440,16 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 }
 
 .btn-success {
-  background-color: #6bd098;
-  border-color: #6bd098;
+  background-color: #04d500;
+  border-color: #04d500;
   color: #FFFFFF;
   opacity: 1;
   filter: alpha(opacity=100);
 }
 .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .show > .btn-success.dropdown-toggle {
-  background-color: #44c47d;
+  background-color: #00c300;
   color: #FFFFFF;
-  border-color: #44c47d;
+  border-color: #00c300;
 }
 .btn-success .caret {
   border-top-color: #FFFFFF;
