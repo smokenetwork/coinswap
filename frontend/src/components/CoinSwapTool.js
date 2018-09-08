@@ -55,8 +55,7 @@ class CoinSwapTool extends Component {
 
                                 <div className="form-group">
                                     <h6>Account Name <span className="icon-danger">*</span></h6>
-
-                                    <p>The account name on Smoke chain</p>
+                                    <p>The account name on Smoke chain to receive SMOKE</p>
                                     <br />
 
                                     <input disabled={this.props.loadingCheckUsername} name="username" type="text" maxLength="16" className={`form-control border-input ${username_bg}`} placeholder="Your new account name on Smoke chain" value={this.state.username} onChange={this.handleChange} />
@@ -88,7 +87,7 @@ class CoinSwapTool extends Component {
                                     <br />
                                     <textarea name="memo"
                                               className="form-control textarea-limited pre-line"
-                                              placeholder="memo content for claiming WLS sharedrop."
+                                              placeholder="memo content for swapping SMOKE."
                                               style={{fontFamily: "monospace", whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}
                                               rows="5"
                                               value={this.props.memo}>

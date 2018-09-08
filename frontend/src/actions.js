@@ -55,7 +55,7 @@ export const Action_ShowMemo = (username, toExitingAccount) => async (dispatch, 
             throw new Error('Account name invalid!');
         }
 
-        let claim_memo = `claim`;
+        let claim_memo = `swap`;
         let params_str = queryString.stringify(params);
         if (params_str) {
             claim_memo += `?${params_str}`;
