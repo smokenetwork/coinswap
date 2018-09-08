@@ -2,6 +2,10 @@
 
 to swap [SMOKE](https://cryptofresh.com/a/SMOKE) on Bitshares blockchain from Presale to Smoke Native Token (SMOKE).
 
+
+![screenshot](https://user-images.githubusercontent.com/11970690/45248698-e2d8bf80-b33e-11e8-9236-1497b40a1535.png)
+
+
 ## Quick Start
 ```
 cd frontend
