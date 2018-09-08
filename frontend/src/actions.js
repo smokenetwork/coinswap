@@ -1,5 +1,4 @@
 const queryString = require('query-string');
-let steemjs_ecc = require('smoke-js/lib/auth/ecc');
 let chainLib = require('smoke-js');
 // chainLib.api.setOptions({url: 'https://beta.whaleshares.net/ws'});
 // chainLib.config.set('address_prefix', 'WLS');
@@ -41,11 +40,11 @@ export const Action_CheckAccountName = (username) => async (dispatch, getState) 
     }
 };
 
-export const Action_ShowMemo = (username, toExitingAccount) => async (dispatch, getState) => {
+export const Action_ShowMemo = (username) => async (dispatch, getState) => {
     try {
         dispatch(actionShowMessage({display: false, type: 'info', content: ''}));
 
-        let state = await getState();
+        // let state = await getState();
 
         let params = {};
         if (username) {
