@@ -13,21 +13,6 @@ const getInitialState = () => {
         // for username
         loadingCheckUsername: false, // for show progress when user clicks Check Account name available
         username_result: '', // empty or error or success
-        ///////////////////////////////
-        // for keys
-        public_keys: {
-            owner: '',
-            active: '',
-            posting: '',
-            memo: ''
-        },
-        password: '',
-        private_keys: {
-            owner: '',
-            active: '',
-            posting: '',
-            memo: ''
-        },
         memo: '' // this is memo of the claiming tx, not memo key
     };
 
