@@ -21,7 +21,7 @@ let last_irreversible_block_num = 0;
 job_scan = async () => {
     console.log('job_scan_claim......');
     try {
-        // await Apis.instance("https://api.bts.ai/", true).init_promise;
+        // await Apis.instance(config.bts_rpc_url, true).init_promise;
         ChainConfig.expire_in_secs = 100;
         ChainConfig.setPrefix(ChainConfig.networks.BitShares.address_prefix);
         ChainConfig.setChainId(ChainConfig.networks.BitShares.chain_id);
@@ -185,7 +185,7 @@ processTx = async (connection, tx) => {
 
 get_account_history_operations = async () => {
     // const accountHistory = await Apis.instance().history_api().exec('get_account_history_operations', [config.bts_tracking_account_id, 0, "1.11.0", stop, 100]);
-    const accountHistory = await fetch(`https://api.bts.ai/`, {
+    const accountHistory = await fetch(config.bts_rpc_url, {
         method: 'POST',
         body: `{"id": 1, "jsonrpc": "2.0", "method": "call", "params": ["history", "get_account_history_operations", ["${config.bts_tracking_account_id}", 0, "1.11.0", "${stop}", 100]]}`,
         headers: { 'Content-Type': 'application/json' }
@@ -198,7 +198,7 @@ get_account_history_operations = async () => {
 };
 
 get_last_irreversible_block_num = async () => {
-    const req_dynamic_global_properties = await fetch(`https://api.bts.ai/`, {
+    const req_dynamic_global_properties = await fetch(config.bts_rpc_url, {
         method: 'POST',
         body: `{"id": 1, "jsonrpc": "2.0", "method": "call", "params": [0, "get_dynamic_global_properties", []]}`,
         headers: { 'Content-Type': 'application/json' }
