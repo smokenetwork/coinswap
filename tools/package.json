@@ -1,0 +1,17 @@
+{
+  "name": "launch_tools",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/smokenetwork/coinswap.git",
+  "author": "baabeetaa",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "config.json": "0.0.4",
+    "dotenv": "^5.0.1",
+    "mysql2": "^1.5.2",
+    "n-readlines": "^1.0.0",
+    "node-fetch": "^2.1.2",
+    "smoke-js": "github:smokenetwork/smoke-js#dev"
+  }
+}
