@@ -11,10 +11,10 @@ let dynamicGlobalProperties = null;
 
 let chainLib = require('smoke-js');
 chainLib.api.setOptions({url: 'ws://192.168.1.25:8090'});
-// chainLib.config.set('address_prefix', 'WLS');
-// chainLib.config.set('chain_id', 'de999ada2ff7ed3d3d580381f229b40b5a0261aec48eb830e540080817b72866');
+chainLib.config.set('address_prefix', 'SMK');
+chainLib.config.set('chain_id', '1ce08345e61cd3bf91673a47fc507e7ed01550dab841fd9cdb0ab66ef576aaf0');
 // smoke testnet2 id: a66e00caa50e6817bbe24e927bf48c5d4ba1b33f36bdbb5fa262a04012c4e3ee
-// smoke mainnet id:
+// smoke mainnet id: 1ce08345e61cd3bf91673a47fc507e7ed01550dab841fd9cdb0ab66ef576aaf0
 
 const IGNORED_ACCOUNTS = [
     "initminer", "initminer1", "initminer2", "initminer3", "initminer4", "initminer5", "initminer6", "initminer7", "initminer8", "initminer9", "initminer10",
@@ -38,7 +38,6 @@ processAccount = async (accountName) => {
         return;
     }
 
-
     let accounts = await chainLib.api.getAccountsAsync([accountName]);
     let account = accounts[0];
     // console.log(JSON.stringify(account));
@@ -51,7 +50,7 @@ processAccount = async (accountName) => {
     let postingKey = account.posting.key_auths[0][0];
     let memoKey = account.memo_key;
 
-    console.log(`ownerKey=${ownerKey}, activeKey=${activeKey}, postingKey=${postingKey}, memoKey=${memoKey}, balance=${balance}, wlsPower=${power}`);
+    console.log(`ownerKey=${ownerKey}, activeKey=${activeKey}, postingKey=${postingKey}, memoKey=${memoKey}, balance=${balance}, power=${power}`);
 
     //
     let [dbres, dberr] = await connection.execute("INSERT tbl_account(username, ownerkey, activekey, postingkey, memokey, balance, power) VALUES(?, ?, ?, ?, ?, ?, ?)",
@@ -113,29 +112,34 @@ taskSnapshotAccounts = async () => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 processCreateAccount = async (accountName, owner_pubkey, active_pubkey, posting_pubkey, memo_pubkey, balance, power) => {
-    let testnet2_acc = config.testnet2_acc;
+    console.log(`processCreateAccount: ${accountName}`)
+
+    let fee = 4.2;
+    if (power > fee) {
+        fee = power;
+    }
 
     ////////////////
     // Processing Creating account
     let operations = [];
     operations.push(["account_create",
         {
-            "fee": config.fee,
+            "fee": `${fee.toFixed(3)} SMOKE`, // config.fee,
             "creator": config.creater,
             "new_account_name": accountName,
             "owner": {
                 "weight_threshold": 1,
-                "account_auths": [[testnet2_acc ,1]],
+                "account_auths": [],
                 "key_auths": [[owner_pubkey, 1]]
             },
             "active": {
                 "weight_threshold": 1,
-                "account_auths": [[testnet2_acc ,1]],
+                "account_auths": [],
                 "key_auths": [[active_pubkey, 1]]
             },
             "posting": {
                 "weight_threshold": 1,
-                "account_auths": [[testnet2_acc ,1]],
+                "account_auths": [],
                 "key_auths": [[posting_pubkey, 1]]
             },
             "memo_key": memo_pubkey,
@@ -143,29 +147,30 @@ processCreateAccount = async (accountName, owner_pubkey, active_pubkey, posting_
         }
     ]);
 
-    // // transfer fund
-    // if (balance_wls > 0) {
-    //     operations.push([
-    //         "transfer",
-    //         {
-    //             "from": config.creater,
-    //             "to": accountName,
-    //             "amount": balance_wls.toFixed(3) + ' WLS',
-    //             "memo" : "testnet2 snapshot"
-    //         }
-    //     ]);
-    // }
-    //
-    // if (power_wls > 0) {
-    //     operations.push([
-    //         "transfer_to_vesting",
-    //         {
-    //             "from": config.creater,
-    //             "to": accountName,
-    //             "amount": power_wls.toFixed(3) + ' WLS'
-    //         }
-    //     ]);
-    // }
+    if (balance >= 0.001) {
+        // transfer fund
+        operations.push([
+            "transfer",
+            {
+                "from": config.creater,
+                "to": accountName,
+                "amount": balance.toFixed(3) + ' SMOKE',
+                "memo" : "snapshot"
+            }
+        ]);
+
+        // if (power > 0) {
+        //     operations.push([
+        //         "transfer_to_vesting",
+        //         {
+        //             "from": config.creater,
+        //             "to": accountName,
+        //             "amount": power.toFixed(3) + ' SMOKE'
+        //         }
+        //     ]);
+        // }
+    }
+
 
     await chainLib.broadcast.sendAsync({operations, extensions: []}, {"active": config.activekey});
 };
@@ -177,16 +182,18 @@ taskCreateAccounts = async () => {
         let [rows, fields]  = await connection.execute("SELECT * FROM tbl_account", []);
         // console.log(JSON.stringify(rows));
 
-        for (row of rows) {
+        for (const row of rows) {
             let accountName = row.username;
             let owner_pubkey = row.ownerkey;
             let active_pubkey = row.activekey;
             let posting_pubkey = row.postingkey;
             let memo_pubkey = row.memokey;
-            let balance_wls = row.balance_wls;
-            let power_wls = row.power_wls;
+            let balance = row.balance;
+            let power = row.power;
 
-            await processCreateAccount(accountName, owner_pubkey, active_pubkey, posting_pubkey, memo_pubkey, balance_wls, power_wls);
+            await processCreateAccount(accountName, owner_pubkey, active_pubkey, posting_pubkey, memo_pubkey, balance, power);
+
+            await sleep(10000);
         }
     } catch(err) {
         console.log(err);
@@ -207,7 +214,7 @@ taskRemoveAuth = async () => {
         let [rows, fields]  = await connection.execute("SELECT * FROM tbl_account", []);
         // console.log(JSON.stringify(rows));
 
-        for (row of rows) {
+        for (const row of rows) {
             let accountName = row.username;
             let owner_pubkey = row.ownerkey;
             let active_pubkey = row.activekey;
@@ -256,7 +263,7 @@ taskRemoveAuth = async () => {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-taskSnapshotAccounts();
-// taskCreateAccounts();
+// taskSnapshotAccounts();
+taskCreateAccounts();
 // taskRemoveAuth();
 
