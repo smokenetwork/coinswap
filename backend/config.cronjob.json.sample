@@ -5,6 +5,7 @@
     "password": "123456",
     "database": "smoke_coinswap"
   },
+  "bts_rpc_url": "https://api.bts.blckchnd.com",
   "bts_memo_key": "5KY...",
   "bts_tracking_account_id": "1.2.377648",
   "smk_acc": "smoke",
