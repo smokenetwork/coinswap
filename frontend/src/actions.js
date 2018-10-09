@@ -1,8 +1,8 @@
 const queryString = require('query-string');
 let chainLib = require('smoke-js');
-// chainLib.api.setOptions({url: 'https://beta.whaleshares.net/ws'});
-// chainLib.config.set('address_prefix', 'WLS');
-// chainLib.config.set('chain_id', 'de999ada2ff7ed3d3d580381f229b40b5a0261aec48eb830e540080817b72866');
+chainLib.api.setOptions({url: 'https://rpc.smoke.io/'});
+chainLib.config.set('address_prefix', 'SMK');
+chainLib.config.set('chain_id', '1ce08345e61cd3bf91673a47fc507e7ed01550dab841fd9cdb0ab66ef576aaf0');
 
 export const actionShowMessage              = (message)         => ({ type: 'M_SHOW_MSG', message });
 export const actionSetCheckUsernameLoading  = (isLoading)       => ({ type: 'M_SET_CHECK_USERNAME_LOADING', isLoading });
